@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.safeContentPadding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -22,11 +24,15 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import org.cloud99p.maroon.data.local.AppDatabase
+import org.cloud99p.maroon.data.model.Transaction
+import org.cloud99p.maroon.view.TransactionItem
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 @Preview
 fun App(
+    db: AppDatabase,
     prefs: DataStore<Preferences>
 ) {
     val scope = rememberCoroutineScope()
@@ -37,6 +43,11 @@ fun App(
             it[counterKey] ?: 0
         }
         .collectAsState(0)
+
+    val transactions by db
+        .dao()
+        .transactions()
+        .collectAsState(emptyList())
 
     MaterialTheme {
         Column(
@@ -67,6 +78,29 @@ fun App(
                 }
             }) {
                 Text("Increment!")
+            }
+
+            Button(onClick = {
+                scope.launch {
+                    db.dao().insert(
+                        Transaction(title = "One Transaction", amount = 1500.0)
+                    )
+                }
+            }) {
+                Text("Add Transaction!")
+            }
+
+            LazyColumn {
+                items(transactions) {
+                    TransactionItem(
+                        transaction = it,
+                        onclick = {
+                            scope.launch {
+                                db.dao().delete(it)
+                            }
+                        }
+                    )
+                }
             }
         }
     }
