@@ -1,5 +1,9 @@
 package org.cloud99p.maroon
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -42,11 +46,18 @@ fun App(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            Text(
-                text = counter.toString(),
-                textAlign = TextAlign.Center,
-                fontSize = 50.sp
-            )
+            AnimatedContent(
+                targetState = counter,
+                transitionSpec = {
+                    slideInVertically { it } togetherWith slideOutVertically { -it }
+                }
+            ) {
+                Text(
+                    text = it.toString(),
+                    textAlign = TextAlign.Center,
+                    fontSize = 50.sp
+                )
+            }
             Button(onClick = {
                 scope.launch {
                     prefs.edit { dataStore ->
