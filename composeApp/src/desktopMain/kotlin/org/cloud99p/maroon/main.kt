@@ -5,17 +5,16 @@ import androidx.compose.ui.window.application
 import org.cloud99p.maroon.data.local.DATASTORE_FILENAME
 import org.cloud99p.maroon.data.local.DatabaseFactory
 import org.cloud99p.maroon.data.local.createDataStore
-import org.cloud99p.maroon.data.local.createDatabase
 
 fun main() = application {
-    val prefs = createDataStore { DATASTORE_FILENAME }
+    val preferences = createDataStore { DATASTORE_FILENAME }
     val dbBuilder = DatabaseFactory().createDatabaseBuilder()
-    val db = createDatabase(dbBuilder)
+    ViewModel.initial(dbBuilder, preferences)
 
     Window(
         onCloseRequest = ::exitApplication,
         title = "Maroon",
     ) {
-        App(db = db, prefs = prefs)
+        App()
     }
 }

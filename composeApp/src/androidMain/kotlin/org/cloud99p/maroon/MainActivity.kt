@@ -16,15 +16,12 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
+        val dbBuilder = DatabaseFactory(applicationContext).createDatabaseBuilder()
+        val preferences = createDataStore(applicationContext)
+        ViewModel.initial(dbBuilder, preferences)
+
         setContent {
-            val dbBuilder = DatabaseFactory(applicationContext).createDatabaseBuilder()
-            val db = createDatabase(dbBuilder)
-            App(
-                db = db,
-                prefs = remember {
-                    createDataStore(applicationContext)
-                }
-            )
+            App()
         }
     }
 }

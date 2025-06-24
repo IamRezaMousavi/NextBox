@@ -2,10 +2,7 @@ package org.cloud99p.maroon.data.local
 
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import kotlinx.cinterop.ExperimentalForeignApi
-import platform.Foundation.NSDocumentDirectory
-import platform.Foundation.NSFileManager
-import platform.Foundation.NSUserDomainMask
+import org.cloud99p.maroon.utils.documentDirectory
 
 
 actual class DatabaseFactory {
@@ -15,17 +12,4 @@ actual class DatabaseFactory {
             name = dbFilePath,
         )
     }
-
-    @OptIn(ExperimentalForeignApi::class)
-    private fun documentDirectory(): String {
-        val documentDirectory = NSFileManager.defaultManager.URLForDirectory(
-            directory = NSDocumentDirectory,
-            inDomain = NSUserDomainMask,
-            appropriateForURL = null,
-            create = false,
-            error = null,
-        )
-        return requireNotNull(documentDirectory?.path)
-    }
-
 }

@@ -15,7 +15,7 @@ import kotlinx.coroutines.flow.Flow
 import org.cloud99p.maroon.data.model.Transaction
 
 @Dao
-interface DBDao {
+interface DatabaseDao {
     @Insert
     suspend fun insert(item: Transaction)
 
@@ -35,7 +35,7 @@ interface DBDao {
 )
 @ConstructedBy(AppDatabaseConstructor::class)
 abstract class AppDatabase : RoomDatabase() {
-    abstract fun dao(): DBDao
+    abstract fun dao(): DatabaseDao
 }
 
 // The Room compiler generates the `actual` implementations.
