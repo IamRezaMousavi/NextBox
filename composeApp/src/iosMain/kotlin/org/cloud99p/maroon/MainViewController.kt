@@ -4,6 +4,7 @@ import androidx.compose.ui.window.ComposeUIViewController
 import org.cloud99p.maroon.data.local.DatabaseFactory
 import org.cloud99p.maroon.data.local.createDataStore
 
+@Suppress("ktlint:standard:function-naming")
 fun MainViewController() = ComposeUIViewController {
     val dbBuilder = DatabaseFactory().createDatabaseBuilder()
     val preferences = createDataStore()

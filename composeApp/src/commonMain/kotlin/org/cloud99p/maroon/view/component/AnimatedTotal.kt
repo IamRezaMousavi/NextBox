@@ -1,6 +1,6 @@
 package org.cloud99p.maroon.view.component
 
-import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.material3.Text
@@ -17,16 +17,16 @@ fun AnimatedTotal(
     modifier: Modifier = Modifier
 ) {
     val animatedTotal by animateFloatAsState(
-        targetValue = value,
+        targetValue = value * 1234,
         animationSpec = tween(
-            durationMillis = 500,
-            easing = LinearEasing
+            durationMillis = 1000,
+            easing = LinearOutSlowInEasing
         ),
         label = "total_animated"
     )
 
     Text(
-        text = "${animatedTotal.roundToInt() * 123}",
+        text = "${animatedTotal.roundToInt()}",
         textAlign = TextAlign.Center,
         fontSize = 20.sp,
         modifier = modifier

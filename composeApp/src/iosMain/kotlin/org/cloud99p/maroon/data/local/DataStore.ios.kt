@@ -4,8 +4,6 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import org.cloud99p.maroon.utils.documentDirectory
 
-fun createDataStore(): DataStore<Preferences> {
-    return createDataStore {
-        documentDirectory() + "/$DATASTORE_FILENAME"
-    }
+fun createDataStore(): DataStore<Preferences> = createDataStore {
+    documentDirectory() + "/$DATASTORE_FILENAME"
 }

@@ -24,6 +24,6 @@ fun AnimatedCounter(
     Text(
         text = it.toString(),
         textAlign = TextAlign.Center,
-        fontSize = 50.sp,
+        fontSize = 50.sp
     )
 }

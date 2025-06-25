@@ -8,7 +8,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: set up JDK
+      - name: Setup JDK
         uses: actions/setup-java@v4
         with:
           java-version: '17'
@@ -20,6 +20,12 @@ jobs:
 
       - name: Run android lint
         run: ./gradlew lint
+
+      - name: Run ktlint
+        run: ./gradlew ktlintCheck
+
+      - name: Run detekt
+        run: ./gradlew detekt
 
       - name: Build Debug
         run: ./gradlew assembleDebug
@@ -33,12 +39,18 @@ jobs:
         with:
           xcode-version: latest-stable
 
-      - name: Set up JDK 17
+      - name: Setup JDK
         uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
           cache: gradle
+
+      - name: Run ktlint
+        run: ./gradlew ktlintCheck
+
+      - name: Run detekt
+        run: ./gradlew detekt
 
       - name: Build
         run: xcodebuild -project iosApp/iosApp.xcodeproj -configuration Debug -scheme iosApp -sdk iphonesimulator
@@ -48,12 +60,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: set up JDK
+      - name: Setup JDK
         uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
           cache: gradle
+
+      - name: Run ktlint
+        run: ./gradlew ktlintCheck
+
+      - name: Run detekt
+        run: ./gradlew detekt
 
       - name: Build
         run: ./gradlew createDistributable

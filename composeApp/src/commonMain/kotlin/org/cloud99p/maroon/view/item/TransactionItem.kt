@@ -76,9 +76,11 @@ fun TransactionItem(
             }
             Text(
                 text = transaction.amount.toString(),
-                color = if (transaction.amount > 0)
+                color = if (transaction.amount > 0) {
                     Color.Green
-                else Color.Red
+                } else {
+                    Color.Red
+                }
             )
         }
     }

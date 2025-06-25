@@ -15,13 +15,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import kotlin.math.roundToInt
+import kotlin.random.Random
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import org.cloud99p.maroon.ViewModel
 import org.cloud99p.maroon.data.model.Transaction
+import org.cloud99p.maroon.util.round
 import org.cloud99p.maroon.view.item.TransactionItem
-import kotlin.math.roundToInt
-import kotlin.random.Random
 
 @Composable
 fun TransactionList(modifier: Modifier = Modifier) {
@@ -70,7 +71,7 @@ fun TransactionList(modifier: Modifier = Modifier) {
                 db.dao().insert(
                     Transaction(
                         title = "Transaction ${(Random.nextFloat() * 100).roundToInt()}",
-                        amount = Random.nextDouble(from = -1.0, until = 1.0) * 100
+                        amount = Random.nextDouble(from = -1000.0, until = 1000.0).round(3)
                     )
                 )
                 lazyListState.smoothScrollToTop()
@@ -82,7 +83,8 @@ fun TransactionList(modifier: Modifier = Modifier) {
 }
 
 suspend fun LazyListState.smoothScrollToTop() {
-    if (firstVisibleItemIndex > layoutInfo.visibleItemsInfo.size)
+    if (firstVisibleItemIndex > layoutInfo.visibleItemsInfo.size) {
         scrollToItem(layoutInfo.visibleItemsInfo.size)
+    }
     animateScrollToItem(0)
 }

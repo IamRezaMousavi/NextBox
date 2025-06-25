@@ -50,11 +50,7 @@ expect class DatabaseFactory {
     fun createDatabaseBuilder(): RoomDatabase.Builder<AppDatabase>
 }
 
-fun createDatabase(
-    builder: RoomDatabase.Builder<AppDatabase>
-): AppDatabase {
-    return builder
-        .setDriver(BundledSQLiteDriver())
-        .setQueryCoroutineContext(Dispatchers.IO)
-        .build()
-}
+fun createDatabase(builder: RoomDatabase.Builder<AppDatabase>): AppDatabase = builder
+    .setDriver(BundledSQLiteDriver())
+    .setQueryCoroutineContext(Dispatchers.IO)
+    .build()

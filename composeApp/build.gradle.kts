@@ -1,6 +1,6 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.compose.compiler.gradle.ComposeFeatureFlag
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -8,9 +8,11 @@ plugins {
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.composeHotReload)
-
     alias(libs.plugins.ksp)
     alias(libs.plugins.room)
+    alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.ktlint)
+    alias(libs.plugins.detekt)
 }
 
 kotlin {
@@ -19,7 +21,7 @@ kotlin {
             jvmTarget.set(JvmTarget.JVM_11)
         }
     }
-    
+
     listOf(
         iosX64(),
         iosArm64(),
@@ -33,9 +35,9 @@ kotlin {
             linkerOpts.add("-lsqlite3")
         }
     }
-    
+
     jvm("desktop")
-    
+
     sourceSets {
         val desktopMain by getting
 
@@ -52,12 +54,15 @@ kotlin {
 
             implementation(libs.room.runtime)
             implementation(libs.sqlite.bundled)
+
+            implementation(libs.navigation.compose)
+            implementation(libs.viewmodel.compose)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
         }
         androidMain.dependencies {
-            implementation(libs.androidx.activity.compose)
+            implementation(libs.activity.compose)
             implementation(compose.preview)
         }
         desktopMain.dependencies {
@@ -92,6 +97,9 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+    lint {
+        lintConfig = file("$rootDir/lint.xml")
+    }
 }
 
 compose.desktop {
@@ -114,8 +122,13 @@ room {
     schemaDirectory("$projectDir/schemas")
 }
 
+detekt {
+    config.setFrom("$rootDir/detekt.yml")
+}
+
 dependencies {
     ksp(libs.room.compiler)
+    detektPlugins(libs.detekt.compose)
 
     debugImplementation(compose.uiTooling)
 }

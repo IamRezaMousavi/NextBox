@@ -8,7 +8,7 @@ actual class DatabaseFactory {
     actual fun createDatabaseBuilder(): RoomDatabase.Builder<AppDatabase> {
         val dbFile = File(DATABASE_FILENAME)
         return Room.databaseBuilder<AppDatabase>(
-            name = dbFile.absolutePath,
+            name = dbFile.absolutePath
         )
     }
 }
