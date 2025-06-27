@@ -8,16 +8,23 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
+import org.cloud99p.maroon.AppViewModel
 import org.cloud99p.maroon.view.Screen
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun HomeScreen(
     navController: NavController,
     modifier: Modifier = Modifier
 ) {
+    val appViewModel = koinViewModel<AppViewModel>()
+    val timer by appViewModel.timer.collectAsState()
+
     Surface(
         modifier = modifier
             .fillMaxSize()
@@ -28,6 +35,8 @@ fun HomeScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
+            Text(timer.toString())
+
             Button(onClick = {
                 navController.navigate(Screen.Counter)
             }) {

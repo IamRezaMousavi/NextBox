@@ -32,7 +32,7 @@ fun TransactionsScreen(
             verticalArrangement = Arrangement.Center
         ) {
             Button(onClick = {
-                navController.navigateUp()
+                navController.popBackStack()
             }) {
                 Text("Back")
             }

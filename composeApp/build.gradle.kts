@@ -4,13 +4,13 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
+    alias(libs.plugins.androidApplication)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
-    alias(libs.plugins.androidApplication)
     alias(libs.plugins.composeHotReload)
+    alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.ksp)
     alias(libs.plugins.room)
-    alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.ktlint)
     alias(libs.plugins.detekt)
 }
@@ -49,14 +49,16 @@ kotlin {
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
 
-            api(libs.datastore.preferences)
-            api(libs.datastore)
+            implementation(libs.navigation.compose)
+            implementation(libs.lifecycle.viewmodel)
 
+            api(libs.datastore)
+            api(libs.datastore.preferences)
             implementation(libs.room.runtime)
             implementation(libs.sqlite.bundled)
 
-            implementation(libs.navigation.compose)
-            implementation(libs.viewmodel.compose)
+            api(libs.koin.core)
+            implementation(libs.koin.compose.viewmodel)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
@@ -64,9 +66,13 @@ kotlin {
         androidMain.dependencies {
             implementation(libs.activity.compose)
             implementation(compose.preview)
+
+            implementation(libs.koin.android)
+            implementation(libs.koin.androidx.compose)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
+            implementation(libs.kotlinx.coroutines.swing)
         }
     }
 }
@@ -96,9 +102,6 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
-    }
-    lint {
-        lintConfig = file("$rootDir/lint.xml")
     }
 }
 

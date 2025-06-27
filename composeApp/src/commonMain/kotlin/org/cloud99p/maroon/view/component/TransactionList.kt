@@ -15,23 +15,18 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import kotlin.math.roundToInt
-import kotlin.random.Random
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import org.cloud99p.maroon.ViewModel
-import org.cloud99p.maroon.data.model.Transaction
-import org.cloud99p.maroon.util.round
+import org.cloud99p.maroon.AppViewModel
 import org.cloud99p.maroon.view.item.TransactionItem
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun TransactionList(modifier: Modifier = Modifier) {
     val scope = rememberCoroutineScope()
-
-    val db = ViewModel.db
-    val transactions by db
-        .dao()
-        .transactions()
+    val appViewModel = koinViewModel<AppViewModel>()
+    val transactions by appViewModel
+        .transactions
         .map { it.reversed() }
         .collectAsState(emptyList())
 
@@ -56,10 +51,8 @@ fun TransactionList(modifier: Modifier = Modifier) {
             ) {
                 TransactionItem(
                     transaction = it,
-                    onclick = {
-                        scope.launch {
-                            db.dao().delete(it)
-                        }
+                    onclick = { transaction ->
+                        appViewModel.delete(transaction)
                     },
                     modifier = Modifier.animateItem()
                 )
@@ -68,12 +61,7 @@ fun TransactionList(modifier: Modifier = Modifier) {
 
         Button(onClick = {
             scope.launch {
-                db.dao().insert(
-                    Transaction(
-                        title = "Transaction ${(Random.nextFloat() * 100).roundToInt()}",
-                        amount = Random.nextDouble(from = -1000.0, until = 1000.0).round(3)
-                    )
-                )
+                appViewModel.addTransaction()
                 lazyListState.smoothScrollToTop()
             }
         }) {

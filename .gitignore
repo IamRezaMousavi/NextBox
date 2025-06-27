@@ -19,4 +19,5 @@ captures
 **/xcshareddata/WorkspaceSettings.xcsettings
 
 **/*.preferences_pb
+**/*app.db*
 

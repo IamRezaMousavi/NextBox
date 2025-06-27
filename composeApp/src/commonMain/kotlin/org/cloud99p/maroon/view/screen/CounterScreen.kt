@@ -31,7 +31,7 @@ fun CounterScreen(
             Counter()
 
             Button(onClick = {
-                navController.navigateUp()
+                navController.popBackStack()
             }) {
                 Text("Back")
             }

@@ -23,7 +23,7 @@ fun TransactionDetails(
     ) {
         Text("Transaction ID: $transactionId")
         Button(onClick = {
-            navController.navigateUp()
+            navController.popBackStack()
         }) {
             Text("Back")
         }

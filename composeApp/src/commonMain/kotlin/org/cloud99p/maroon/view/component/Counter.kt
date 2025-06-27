@@ -7,27 +7,15 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.intPreferencesKey
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.launch
-import org.cloud99p.maroon.ViewModel
+import org.cloud99p.maroon.AppViewModel
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun Counter(modifier: Modifier = Modifier) {
-    val scope = rememberCoroutineScope()
-
-    val prefs = ViewModel.pref
-    val counter by prefs
-        .data
-        .map {
-            val counterKey = intPreferencesKey("counter")
-            it[counterKey] ?: 0
-        }
-        .collectAsState(0)
+    val appViewModel = koinViewModel<AppViewModel>()
+    val counter by appViewModel.counter.collectAsState(0)
 
     Column(
         modifier = modifier,
@@ -37,12 +25,7 @@ fun Counter(modifier: Modifier = Modifier) {
         AnimatedCounter(counter)
 
         Button(onClick = {
-            scope.launch {
-                prefs.edit { dataStore ->
-                    val counterKey = intPreferencesKey("counter")
-                    dataStore[counterKey] = counter + 1
-                }
-            }
+            appViewModel.increase()
         }) {
             Text("Increment!")
         }
