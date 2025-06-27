@@ -15,8 +15,8 @@ ksp = "2.1.21-2.0.2"
 room = "2.7.1"
 sqlite = "2.5.1"
 
-koin = "4.0.4"
-koinCompose = "4.0.4"
+koin = "4.1.0"
+koinCompose = "4.1.0"
 
 ktlint = "12.3.0"
 detekt = "1.23.8"
