@@ -5,6 +5,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import org.cloud99p.maroon.data.model.Theme
+import org.cloud99p.maroon.preferences.DataPreferences
 
 private val lightScheme = lightColorScheme(
     primary = primaryLight,
@@ -236,11 +241,18 @@ private val highContrastDarkColorScheme = darkColorScheme(
 
 @Composable
 fun MaroonTheme(
-    isDark: Boolean = isSystemInDarkTheme(),
+    isSystemInDarkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit
-) {
+) = with(DataPreferences) {
+    val themeState by themeProperty.stateFlow.collectAsState()
+    val colorScheme = when (themeState) {
+        Theme.SYSTEM -> if (isSystemInDarkTheme) darkScheme else lightScheme
+        Theme.DARK -> darkScheme
+        Theme.LIGHT -> lightScheme
+    }
+
     MaterialTheme(
-        colorScheme = if (isDark) darkScheme else lightScheme,
+        colorScheme = colorScheme,
         typography = AppTypography,
         content = content
     )
