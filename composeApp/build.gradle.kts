@@ -134,7 +134,15 @@ detekt {
 }
 
 dependencies {
-    ksp(libs.room.compiler)
+    listOf(
+        "kspAndroid",
+        "kspDesktop",
+        "kspIosSimulatorArm64",
+        "kspIosX64",
+        "kspIosArm64"
+    ).forEach {
+        add(it, libs.room.compiler)
+    }
     detektPlugins(libs.detekt.compose)
 
     debugImplementation(compose.uiTooling)

@@ -9,24 +9,20 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import org.cloud99p.maroon.AppViewModel
-import org.koin.compose.viewmodel.koinViewModel
+import org.cloud99p.maroon.preferences.DataPreferences
 
 @Composable
-fun Counter(modifier: Modifier = Modifier) {
-    val appViewModel = koinViewModel<AppViewModel>()
-    val counter by appViewModel.counter.collectAsState(0)
+fun Counter(modifier: Modifier = Modifier) = with(DataPreferences) {
+    val counterState by counterProperty.stateFlow.collectAsState()
 
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        AnimatedCounter(counter)
+        AnimatedCounter(counterState)
 
-        Button(onClick = {
-            appViewModel.increase()
-        }) {
+        Button(onClick = { counter += 1 }) {
             Text("Increment!")
         }
     }
