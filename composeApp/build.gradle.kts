@@ -56,6 +56,10 @@ kotlin {
             implementation(libs.navigation.compose)
             implementation(libs.lifecycle.viewmodel)
 
+            implementation(libs.kotlinx.datetime)
+
+            implementation(libs.material.icons)
+
             api(libs.datastore)
             api(libs.datastore.preferences)
             implementation(libs.room.runtime)

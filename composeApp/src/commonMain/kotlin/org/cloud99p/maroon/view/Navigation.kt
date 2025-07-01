@@ -9,8 +9,8 @@ import androidx.navigation.toRoute
 import kotlinx.serialization.Serializable
 import org.cloud99p.maroon.view.screen.CounterScreen
 import org.cloud99p.maroon.view.screen.HomeScreen
+import org.cloud99p.maroon.view.screen.TransactionAdd
 import org.cloud99p.maroon.view.screen.TransactionDetails
-import org.cloud99p.maroon.view.screen.TransactionsScreen
 
 sealed class Screen {
     @Serializable
@@ -20,7 +20,7 @@ sealed class Screen {
     data object Counter : Screen()
 
     @Serializable
-    data object Transactions : Screen()
+    data object TransactionAdd : Screen()
 
     @Serializable
     data class TransactionDetail(val id: Long) : Screen()
@@ -43,8 +43,8 @@ fun Navigation(modifier: Modifier = Modifier) {
             CounterScreen(navController)
         }
 
-        composable<Screen.Transactions> {
-            TransactionsScreen(navController)
+        composable<Screen.TransactionAdd> {
+            TransactionAdd(navController)
         }
 
         composable<Screen.TransactionDetail> { navBackStackEntry ->

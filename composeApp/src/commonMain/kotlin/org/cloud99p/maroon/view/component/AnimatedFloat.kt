@@ -12,12 +12,12 @@ import androidx.compose.ui.unit.sp
 import kotlin.math.roundToInt
 
 @Composable
-fun AnimatedTotal(
+fun AnimatedFloat(
     value: Float,
     modifier: Modifier = Modifier
 ) {
     val animatedTotal by animateFloatAsState(
-        targetValue = value * 1234,
+        targetValue = value,
         animationSpec = tween(
             durationMillis = 1000,
             easing = LinearOutSlowInEasing
