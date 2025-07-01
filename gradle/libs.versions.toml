@@ -9,7 +9,7 @@ navigationCompose = "2.9.0-beta03"
 lifecycleViewmodel = "2.9.1"
 
 kotlinxCoroutines = "1.10.2"
-kotlinxDatetime = "0.7.0"
+kotlinxDatetime = "0.7.0-0.6.x-compat"
 
 materialIcons = "1.7.3"
 
