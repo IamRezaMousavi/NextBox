@@ -10,11 +10,6 @@ object DataPreferences : DataStoreHolder() {
     val themeProperty = enum("is_dark", Theme.SYSTEM)
     var theme by themeProperty
 
-    fun changeTheme() {
-        theme = when (theme) {
-            Theme.SYSTEM -> Theme.LIGHT
-            Theme.LIGHT -> Theme.DARK
-            Theme.DARK -> Theme.SYSTEM
-        }
-    }
+    val defaultAccountProperty = string("default_account", "Bank")
+    var defaultAccount by defaultAccountProperty
 }

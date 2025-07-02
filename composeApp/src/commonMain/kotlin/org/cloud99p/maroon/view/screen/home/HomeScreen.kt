@@ -72,12 +72,7 @@ fun HomeScreen(
             modifier = Modifier.fillMaxWidth().padding(8.dp)
         ) {
             items(items = accounts, key = { it.id }) { account ->
-                AccountItem(
-                    account = account,
-                    onClicked = {
-                        appViewModel.delete(account)
-                    }
-                )
+                AccountItem(account = account)
             }
 
             item {

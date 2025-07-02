@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import org.cloud99p.maroon.AppViewModel
 import org.cloud99p.maroon.data.model.Transaction
+import org.cloud99p.maroon.preferences.DataPreferences
 import org.cloud99p.maroon.view.component.ChipGroup
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -98,7 +99,9 @@ fun TransactionAdd(
 
             ChipGroup(
                 items = accounts.map { it.name },
-                defaultSelectedIndex = 0,
+                defaultSelectedIndex = accounts.indexOfFirst {
+                    it.name == DataPreferences.defaultAccount
+                },
                 onSelectedChange = { index -> accountSelected = accounts[index] }
             )
 

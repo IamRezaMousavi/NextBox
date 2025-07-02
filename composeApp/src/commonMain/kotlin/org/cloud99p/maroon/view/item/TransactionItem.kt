@@ -26,7 +26,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import org.cloud99p.maroon.AppViewModel
 import org.cloud99p.maroon.data.model.Account
@@ -82,7 +81,13 @@ fun TransactionItem(
 
         Text(
             text = transaction.amount.toString(),
-            color = if (transaction.amount > 0) Color(0xFF00C853) else Color(0xFFD50000)
+            color = if (transaction.amount >
+                0
+            ) {
+                MaterialTheme.colorScheme.primary
+            } else {
+                MaterialTheme.colorScheme.error
+            }
         )
     }
 }

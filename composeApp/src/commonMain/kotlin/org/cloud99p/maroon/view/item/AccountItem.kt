@@ -7,10 +7,17 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.layout.width
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -22,68 +29,88 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import org.cloud99p.maroon.AppViewModel
 import org.cloud99p.maroon.data.model.Account
+import org.cloud99p.maroon.preferences.DataPreferences
 import org.koin.compose.viewmodel.koinViewModel
+
+@Composable
+fun AccountItemBox(
+    modifier: Modifier = Modifier,
+    content: @Composable ColumnScope.() -> Unit
+) = Card(
+    modifier = Modifier
+        .defaultMinSize(minWidth = 150.dp)
+        .height(130.dp)
+        .padding(vertical = 16.dp, horizontal = 8.dp)
+        .then(modifier),
+    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer),
+    shape = MaterialTheme.shapes.medium,
+    content = content
+)
 
 @Composable
 fun AccountItem(
     account: Account,
-    modifier: Modifier = Modifier,
-    onClicked: (Account) -> Unit = {}
-) = Card(
-    modifier = modifier
-        .wrapContentSize()
-        .padding(vertical = 16.dp, horizontal = 8.dp)
-        .border(
-            width = 1.dp,
-            color = MaterialTheme.colorScheme.error,
-            shape = MaterialTheme.shapes.medium
-        )
-        .clickable {
-            onClicked(account)
-        },
-    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-    shape = MaterialTheme.shapes.medium
+    modifier: Modifier = Modifier
 ) {
-    val appViewModel = koinViewModel<AppViewModel>()
-    val amount by appViewModel.accountAmount(account).collectAsState(0.0)
-    val transactionsCount by appViewModel.accountTransactionsCount(account).collectAsState(0)
+    val isSelected by DataPreferences.defaultAccountProperty.stateFlow.collectAsState()
 
-    val animatedAmount by animateFloatAsState(
-        targetValue = amount.toFloat(),
-        animationSpec = tween(
-            durationMillis = 1000,
-            easing = LinearOutSlowInEasing
-        ),
-        label = "animated_amount"
-    )
-
-    Column(
-        modifier = modifier.padding(top = 8.dp, bottom = 8.dp, start = 8.dp, end = 24.dp),
-        horizontalAlignment = Alignment.Start,
-        verticalArrangement = Arrangement.spacedBy(2.dp)
+    AccountItemBox(
+        modifier = modifier
+            .clickable {
+                DataPreferences.defaultAccount = account.name
+            }
+            .let {
+                if (account.name == isSelected) {
+                    it.border(
+                        width = 1.dp,
+                        color = MaterialTheme.colorScheme.primary,
+                        shape = MaterialTheme.shapes.medium
+                    )
+                } else {
+                    it
+                }
+            }
     ) {
-        Text(
-            text = account.name,
-            style = MaterialTheme.typography.titleLarge,
-            fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.onSecondaryContainer
+        val appViewModel = koinViewModel<AppViewModel>()
+        val amount by appViewModel.accountAmount(account).collectAsState(0.0)
+        val transactionsCount by appViewModel.accountTransactionsCount(account).collectAsState(0)
+
+        val animatedAmount by animateFloatAsState(
+            targetValue = amount.toFloat(),
+            animationSpec = tween(
+                durationMillis = 1000,
+                easing = LinearOutSlowInEasing
+            ),
+            label = "animated_amount"
         )
-        Text(
-            text = animatedAmount.toString(),
-            style = MaterialTheme.typography.bodyLarge,
-            fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.onSecondaryContainer
-        )
-        Text(
-            text = "$transactionsCount Transactions",
-            style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSecondaryContainer
-        )
-        Text(
-            text = "ID ${account.id}",
-            style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSecondaryContainer
-        )
+
+        Column(
+            modifier = Modifier.padding(8.dp),
+            verticalArrangement = Arrangement.spacedBy(2.dp)
+        ) {
+            Text(
+                text = account.name,
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onSecondaryContainer
+            )
+            Text(
+                text = animatedAmount.toString(),
+                style = MaterialTheme.typography.bodyLarge,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onSecondaryContainer
+            )
+            Text(
+                text = "$transactionsCount Transactions",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSecondaryContainer
+            )
+            Text(
+                text = "ID ${account.id}",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSecondaryContainer
+            )
+        }
     }
 }
 
@@ -91,10 +118,23 @@ fun AccountItem(
 fun AccountItemPlaceHolder(
     modifier: Modifier = Modifier,
     onClicked: () -> Unit = {}
-) = AccountItem(
-    modifier = modifier,
-    account = Account(name = "Add New Account"),
-    onClicked = {
-        onClicked()
+) = AccountItemBox(
+    modifier = modifier.clickable { onClicked() }
+) {
+    Column(
+        modifier = Modifier.fillMaxSize().padding(8.dp),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Icon(
+            imageVector = Icons.Filled.Add,
+            contentDescription = "add"
+        )
+        Text(
+            text = "Add New Account",
+            style = MaterialTheme.typography.titleLarge,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.onSecondaryContainer
+        )
     }
-)
+}
