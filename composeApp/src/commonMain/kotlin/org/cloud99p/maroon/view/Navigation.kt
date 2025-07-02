@@ -7,10 +7,11 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import kotlinx.serialization.Serializable
-import org.cloud99p.maroon.view.screen.CounterScreen
-import org.cloud99p.maroon.view.screen.HomeScreen
-import org.cloud99p.maroon.view.screen.TransactionAdd
-import org.cloud99p.maroon.view.screen.TransactionDetails
+import org.cloud99p.maroon.view.screen.account.AccountAdd
+import org.cloud99p.maroon.view.screen.home.CounterScreen
+import org.cloud99p.maroon.view.screen.home.HomeScreen
+import org.cloud99p.maroon.view.screen.transaction.TransactionAdd
+import org.cloud99p.maroon.view.screen.transaction.TransactionDetails
 
 sealed class Screen {
     @Serializable
@@ -24,6 +25,9 @@ sealed class Screen {
 
     @Serializable
     data class TransactionDetail(val id: Long) : Screen()
+
+    @Serializable
+    data object AccountAdd : Screen()
 }
 
 @Composable
@@ -50,6 +54,10 @@ fun Navigation(modifier: Modifier = Modifier) {
         composable<Screen.TransactionDetail> { navBackStackEntry ->
             val transactionId = navBackStackEntry.toRoute<Long>()
             TransactionDetails(transactionId = transactionId, navController = navController)
+        }
+
+        composable<Screen.AccountAdd> {
+            AccountAdd(navController)
         }
     }
 }

@@ -86,3 +86,15 @@ fun AccountItem(
         )
     }
 }
+
+@Composable
+fun AccountItemPlaceHolder(
+    modifier: Modifier = Modifier,
+    onClicked: () -> Unit = {}
+) = AccountItem(
+    modifier = modifier,
+    account = Account(name = "Add New Account"),
+    onClicked = {
+        onClicked()
+    }
+)

@@ -1,4 +1,4 @@
-package org.cloud99p.maroon.view.screen
+package org.cloud99p.maroon.view.screen.transaction
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

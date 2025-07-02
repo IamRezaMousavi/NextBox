@@ -1,4 +1,4 @@
-package org.cloud99p.maroon.view.screen
+package org.cloud99p.maroon.view.screen.transaction
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -7,8 +7,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeContentPadding
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -26,14 +24,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import org.cloud99p.maroon.AppViewModel
 import org.cloud99p.maroon.data.model.Transaction
-import org.cloud99p.maroon.view.component.Chip
+import org.cloud99p.maroon.view.component.ChipGroup
 import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -57,7 +54,6 @@ fun TransactionAdd(
             .safeContentPadding()
     ) {
         Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
             modifier = modifier
                 .fillMaxSize()
                 .padding(10.dp)
@@ -100,16 +96,11 @@ fun TransactionAdd(
                 modifier = Modifier.fillMaxWidth()
             )
 
-            LazyRow {
-                items(items = accounts, key = { it.id }) { account ->
-                    Chip(
-                        label = account.name,
-                        selected = account == accountSelected,
-                        onClicked = { accountSelected = account },
-                        modifier = Modifier.padding(8.dp)
-                    )
-                }
-            }
+            ChipGroup(
+                items = accounts.map { it.name },
+                defaultSelectedIndex = 0,
+                onSelectedChange = { index -> accountSelected = accounts[index] }
+            )
 
             Spacer(modifier = Modifier.height(16.dp))
 

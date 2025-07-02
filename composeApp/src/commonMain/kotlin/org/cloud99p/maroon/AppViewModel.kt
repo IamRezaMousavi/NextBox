@@ -20,15 +20,15 @@ class AppViewModel(private val db: AppDatabase) : ViewModel() {
         .dao()
         .accounts()
 
-//    init {
-//        viewModelScope.launch {
-//            db.dao().insert(Account(name = "Bank"))
-//        }
-//    }
-
     fun insert(transaction: Transaction) {
         viewModelScope.launch {
             db.dao().insert(transaction)
+        }
+    }
+
+    fun insert(account: Account) {
+        viewModelScope.launch {
+            db.dao().insert(account)
         }
     }
 

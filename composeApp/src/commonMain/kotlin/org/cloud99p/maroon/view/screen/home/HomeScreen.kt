@@ -1,4 +1,4 @@
-package org.cloud99p.maroon.view.screen
+package org.cloud99p.maroon.view.screen.home
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -26,6 +26,7 @@ import kotlinx.coroutines.flow.map
 import org.cloud99p.maroon.AppViewModel
 import org.cloud99p.maroon.view.Screen
 import org.cloud99p.maroon.view.item.AccountItem
+import org.cloud99p.maroon.view.item.AccountItemPlaceHolder
 import org.cloud99p.maroon.view.item.TransactionItem
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -54,7 +55,6 @@ fun HomeScreen(
 ) { paddingValues ->
 
     val appViewModel = koinViewModel<AppViewModel>()
-    val amount by appViewModel.amount.collectAsState(0)
 
     val accounts by appViewModel
         .accounts
@@ -76,6 +76,14 @@ fun HomeScreen(
                     account = account,
                     onClicked = {
                         appViewModel.delete(account)
+                    }
+                )
+            }
+
+            item {
+                AccountItemPlaceHolder(
+                    onClicked = {
+                        navController.navigate(Screen.AccountAdd)
                     }
                 )
             }
