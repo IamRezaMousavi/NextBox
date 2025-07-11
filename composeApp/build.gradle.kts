@@ -85,11 +85,11 @@ kotlin {
 }
 
 android {
-    namespace = "org.cloud99p.maroon"
+    namespace = "org.cloud99p.nextbox"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "org.cloud99p.maroon"
+        applicationId = "org.cloud99p.nextbox"
         minSdk = 24
         targetSdk = 35
         versionCode = 1
@@ -114,11 +114,11 @@ android {
 
 compose.desktop {
     application {
-        mainClass = "org.cloud99p.maroon.MainKt"
+        mainClass = "org.cloud99p.nextbox.MainKt"
 
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "org.cloud99p.maroon"
+            packageName = "org.cloud99p.nextbox"
             packageVersion = "1.0.0"
         }
     }

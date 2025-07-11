@@ -1,4 +1,4 @@
-rootProject.name = "Maroon"
+rootProject.name = "NextBox"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 pluginManagement {
