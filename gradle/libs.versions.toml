@@ -23,7 +23,7 @@ koinCompose = "4.1.0"
 
 ktlint = "12.3.0"
 detekt = "1.23.8"
-detektCompose = "0.4.22"
+detektCompose = "0.4.23"
 
 [libraries]
 activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activityCompose" }
