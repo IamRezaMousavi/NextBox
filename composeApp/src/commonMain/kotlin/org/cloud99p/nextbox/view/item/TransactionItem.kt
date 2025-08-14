@@ -81,9 +81,7 @@ fun TransactionItem(
 
         Text(
             text = transaction.amount.toString(),
-            color = if (transaction.amount >
-                0
-            ) {
+            color = if (transaction.amount > 0) {
                 MaterialTheme.colorScheme.primary
             } else {
                 MaterialTheme.colorScheme.error
