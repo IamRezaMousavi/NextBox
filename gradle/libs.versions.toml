@@ -14,7 +14,7 @@ kotlinxDatetime = "0.7.1"
 materialIcons = "1.7.3"
 
 datastore = "1.1.7"
-ksp = "2.2.0-2.0.2"
+ksp = "2.2.10-2.0.2"
 room = "2.7.1"
 sqlite = "2.5.1"
 
