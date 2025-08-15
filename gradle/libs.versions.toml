@@ -1,15 +1,15 @@
 [versions]
-kotlin = "2.2.0"
-agp = "8.7.3"
+kotlin = "2.2.10"
+agp = "8.11.1"
 composeMultiplatform = "1.8.2"
-composeHotReload = "1.0.0-beta02"
+composeHotReload = "1.0.0-beta05"
 
 activityCompose = "1.10.1"
 navigationCompose = "2.9.0-beta03"
 lifecycleViewmodel = "2.9.1"
 
 kotlinxCoroutines = "1.10.2"
-kotlinxDatetime = "0.7.0"
+kotlinxDatetime = "0.7.1"
 
 materialIcons = "1.7.3"
 
@@ -21,9 +21,9 @@ sqlite = "2.5.1"
 koin = "4.1.0"
 koinCompose = "4.1.0"
 
-ktlint = "12.3.0"
+ktlint = "13.0.0"
 detekt = "1.23.8"
-detektCompose = "0.4.22"
+detektCompose = "0.4.27"
 
 [libraries]
 activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activityCompose" }

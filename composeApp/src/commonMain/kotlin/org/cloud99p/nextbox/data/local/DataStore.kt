@@ -26,12 +26,12 @@ import okio.Path.Companion.toPath
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
+internal const val DATASTORE_FILENAME = "prefs.preferences_pb"
+
 fun createDataStore(producePath: () -> String): DataStore<Preferences> =
     PreferenceDataStoreFactory.createWithPath(
         produceFile = { producePath().toPath() }
     )
-
-internal const val DATASTORE_FILENAME = "prefs.preferences_pb"
 
 @Stable
 data class DataStoreProperty<T : Any, S : Any>(
