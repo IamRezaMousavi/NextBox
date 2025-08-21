@@ -21,7 +21,7 @@ sqlite = "2.5.1"
 koin = "4.1.0"
 koinCompose = "4.1.0"
 
-ktlint = "13.0.0"
+ktlint = "13.1.0"
 detekt = "1.23.8"
 detektCompose = "0.4.27"
 
