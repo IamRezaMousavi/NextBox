@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -30,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import org.cloud99p.nextbox.AppViewModel
 import org.cloud99p.nextbox.data.model.Account
 import org.cloud99p.nextbox.preferences.DataPreferences
+import org.cloud99p.nextbox.util.formatAsMoney
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -52,15 +54,13 @@ fun AccountItem(
     account: Account,
     modifier: Modifier = Modifier
 ) {
-    val isSelected by DataPreferences.defaultAccountProperty.stateFlow.collectAsState()
-
     AccountItemBox(
         modifier = modifier
             .clickable {
                 DataPreferences.defaultAccount = account.name
             }
             .let {
-                if (account.name == isSelected) {
+                if (account.name == DataPreferences.defaultAccount) {
                     it.border(
                         width = 1.dp,
                         color = MaterialTheme.colorScheme.primary,
@@ -95,7 +95,7 @@ fun AccountItem(
                 color = MaterialTheme.colorScheme.onSecondaryContainer
             )
             Text(
-                text = animatedAmount.toString(),
+                text = animatedAmount.formatAsMoney(DataPreferences.decimal),
                 style = MaterialTheme.typography.bodyLarge,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onSecondaryContainer
@@ -128,11 +128,12 @@ fun AccountItemPlaceHolder(
     ) {
         Icon(
             imageVector = Icons.Filled.Add,
-            contentDescription = "add"
+            contentDescription = "add",
+            modifier = Modifier.size(50.dp)
         )
         Text(
             text = "Add New Account",
-            style = MaterialTheme.typography.titleLarge,
+            style = MaterialTheme.typography.titleSmall,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.onSecondaryContainer
         )

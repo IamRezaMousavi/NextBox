@@ -1,6 +1,7 @@
 package org.cloud99p.nextbox.data.local
 
 import androidx.compose.runtime.Stable
+import androidx.compose.runtime.mutableStateOf
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
@@ -17,11 +18,12 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import okio.Path.Companion.toPath
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -34,51 +36,49 @@ fun createDataStore(producePath: () -> String): DataStore<Preferences> =
     )
 
 @Stable
-data class DataStoreProperty<T : Any, S : Any>(
-    private val key: Preferences.Key<S>,
+data class DataStoreProperty<T>(
+    private val key: Preferences.Key<T>,
     private val defaultValue: T,
-    private val dataStore: DataStore<Preferences>,
-    private val read: ((S) -> T)? = null,
-    private val write: ((T) -> S)? = null
+    private val dataStore: DataStore<Preferences>
 ) : ReadWriteProperty<Any, T> {
     private val scope = CoroutineScope(Dispatchers.IO)
 
-    private val _stateFlow = MutableStateFlow(defaultValue)
-    val stateFlow = _stateFlow.asStateFlow()
+    private val state = mutableStateOf(defaultValue)
+    val flow = MutableStateFlow(defaultValue)
+
+    private fun setState(newValue: T) {
+        state.value = newValue
+        flow.update { newValue }
+    }
 
     init {
-        @Suppress("UNCHECKED_CAST")
+        val initial = runBlocking {
+            dataStore.data.map { it[key] ?: defaultValue }.first()
+        }
+        setState(initial)
+
         scope.launch {
             dataStore.data
-                .map { prefs ->
-                    prefs[key]?.let { v ->
-                        runCatching { read?.invoke(v) ?: v as T }
-                            .getOrDefault(defaultValue)
-                    } ?: defaultValue
-                }
-                .collectLatest { v ->
-                    _stateFlow.update { v }
-                }
+                .map { it[key] ?: defaultValue }
+                .distinctUntilChanged()
+                .collect { setState(it) }
         }
     }
 
     override fun getValue(
         thisRef: Any,
         property: KProperty<*>
-    ): T = stateFlow.value
+    ): T = state.value
 
-    @Suppress("UNCHECKED_CAST")
     override fun setValue(
         thisRef: Any,
         property: KProperty<*>,
         value: T
     ) {
-        _stateFlow.update { value }
         scope.launch {
-            dataStore.edit { prefs ->
-                prefs[key] = write?.invoke(value) ?: value as S
-            }
+            dataStore.edit { it[key] = value }
         }
+        setState(value)
     }
 }
 
@@ -139,14 +139,30 @@ open class DataStoreHolder : KoinComponent {
         dataStore = dataStore
     )
 
-    inline fun <reified T : Enum<T>> enum(
+    inline fun <reified E : Enum<E>> enum(
         name: String,
-        defaultValue: T
+        defaultValue: E
     ) = DataStoreProperty(
         key = stringPreferencesKey(name),
-        defaultValue = defaultValue,
-        dataStore = dataStore,
-        read = { s -> enumValueOf<T>(s) },
-        write = { v -> v.name }
+        defaultValue = defaultValue.name,
+        dataStore = dataStore
     )
+        .let { prop ->
+            object : ReadWriteProperty<Any, E> {
+                override fun getValue(
+                    thisRef: Any,
+                    property: KProperty<*>
+                ) = runCatching {
+                    enumValueOf<E>(prop.getValue(thisRef, property))
+                }.getOrDefault(defaultValue)
+
+                override fun setValue(
+                    thisRef: Any,
+                    property: KProperty<*>,
+                    value: E
+                ) {
+                    prop.setValue(thisRef, property, value.name)
+                }
+            }
+        }
 }

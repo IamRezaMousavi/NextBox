@@ -52,8 +52,8 @@ fun Navigation(modifier: Modifier = Modifier) {
         }
 
         composable<Screen.TransactionDetail> { navBackStackEntry ->
-            val transactionId = navBackStackEntry.toRoute<Long>()
-            TransactionDetails(transactionId = transactionId, navController = navController)
+            val transaction = navBackStackEntry.toRoute<Screen.TransactionDetail>()
+            TransactionDetails(transactionId = transaction.id, navController = navController)
         }
 
         composable<Screen.AccountAdd> {

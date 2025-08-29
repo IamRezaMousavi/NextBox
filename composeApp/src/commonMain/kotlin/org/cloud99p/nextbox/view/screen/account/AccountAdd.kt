@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import org.cloud99p.nextbox.AppViewModel
 import org.cloud99p.nextbox.data.model.Account
+import org.cloud99p.nextbox.preferences.DataPreferences
 import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -76,6 +77,9 @@ fun AccountAdd(
                     if (name.isEmpty()) return@Button
                     val newAccount = Account(name = name)
                     appViewModel.insert(newAccount)
+                    if (DataPreferences.defaultAccount.isEmpty()) {
+                        DataPreferences.defaultAccount = name
+                    }
                     navController.popBackStack()
                 }
             ) {

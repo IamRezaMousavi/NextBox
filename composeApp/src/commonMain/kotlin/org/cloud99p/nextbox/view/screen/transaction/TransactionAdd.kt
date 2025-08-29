@@ -32,6 +32,7 @@ import org.cloud99p.nextbox.AppViewModel
 import org.cloud99p.nextbox.data.model.Transaction
 import org.cloud99p.nextbox.preferences.DataPreferences
 import org.cloud99p.nextbox.view.component.ChipGroup
+import org.cloud99p.nextbox.view.component.Counter
 import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -42,7 +43,7 @@ fun TransactionAdd(
 ) {
     val appViewModel = koinViewModel<AppViewModel>()
     val accounts by appViewModel.accounts.collectAsState(emptyList())
-    var accountSelected by remember { mutableStateOf(accounts.firstOrNull()) }
+    var accountSelected by remember { mutableStateOf(DataPreferences.defaultAccount) }
 
     var title by remember { mutableStateOf("") }
     var amountText by remember { mutableStateOf("") }
@@ -73,6 +74,10 @@ fun TransactionAdd(
                 }
             )
 
+            Counter()
+
+            Spacer(modifier = Modifier.height(16.dp))
+
             OutlinedTextField(
                 value = title,
                 onValueChange = { title = it },
@@ -99,10 +104,8 @@ fun TransactionAdd(
 
             ChipGroup(
                 items = accounts.map { it.name },
-                defaultSelectedIndex = accounts.indexOfFirst {
-                    it.name == DataPreferences.defaultAccount
-                },
-                onSelectedChange = { index -> accountSelected = accounts[index] }
+                defaultSelectedItem = accountSelected,
+                onSelectedChanged = { item -> accountSelected = item }
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -119,7 +122,7 @@ fun TransactionAdd(
                             val transaction = Transaction(
                                 title = title.ifEmpty { null },
                                 amount = amount,
-                                account = accountSelected?.id ?: 1
+                                account = accounts.find { it.name == accountSelected }?.id ?: 1
                             )
                             appViewModel.insert(transaction)
                             navController.popBackStack()

@@ -5,11 +5,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
-import org.cloud99p.nextbox.data.model.Theme
-import org.cloud99p.nextbox.preferences.DataPreferences
 
 private val lightScheme = lightColorScheme(
     primary = primaryLight,
@@ -243,16 +240,9 @@ private val highContrastDarkColorScheme = darkColorScheme(
 fun NextBoxTheme(
     isSystemInDarkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit
-) = with(DataPreferences) {
-    val themeState by themeProperty.stateFlow.collectAsState()
-    val colorScheme = when (themeState) {
-        Theme.SYSTEM -> if (isSystemInDarkTheme) darkScheme else lightScheme
-        Theme.DARK -> darkScheme
-        Theme.LIGHT -> lightScheme
-    }
-
+) {
     MaterialTheme(
-        colorScheme = colorScheme,
+        colorScheme = if (isSystemInDarkTheme) darkScheme else lightScheme,
         typography = AppTypography,
         content = content
     )

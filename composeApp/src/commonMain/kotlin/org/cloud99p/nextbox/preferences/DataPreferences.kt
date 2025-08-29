@@ -1,15 +1,11 @@
 package org.cloud99p.nextbox.preferences
 
 import org.cloud99p.nextbox.data.local.DataStoreHolder
-import org.cloud99p.nextbox.data.model.Theme
 
 object DataPreferences : DataStoreHolder() {
-    val counterProperty = int("counter", 0)
-    var counter by counterProperty
+    var counter by int("counter", 0)
 
-    val themeProperty = enum("is_dark", Theme.SYSTEM)
-    var theme by themeProperty
+    var defaultAccount by string("default_account", "")
 
-    val defaultAccountProperty = string("default_account", "Bank")
-    var defaultAccount by defaultAccountProperty
+    var decimal by int("decimal", 0)
 }
